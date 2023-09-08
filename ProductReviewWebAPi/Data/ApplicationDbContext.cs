@@ -8,7 +8,7 @@ namespace ProductReviewWebAPi.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Review> Reviews { get; set; }
 
-        public DbSet<Product> products { get; set; }
+       
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }

@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using ProductReviewWebAPi.Data;
+using ProductReviewWebAPi.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,11 +11,36 @@ namespace ProductReviewWebAPi.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        // GET: api/<ProductsController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly ApplicationDbContext _context;
+        public ProductsController(ApplicationDbContext context)
         {
-            return new string[] { "value1", "value2" };
+            _context = context;
+        }
+
+        // GET: api/<ProductsController> // Get All
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var products = _context.Products.ToList();
+            return StatusCode(200, products);
+        }
+
+
+        // GET: api/<ProductsController> // Get All under 20$
+        [HttpGet]
+        public IActionResult GetMaxPrice([FromQuery]double?price) 
+        {
+            double maxPrice = 20.00;
+            var products= _context.Products.ToList();   
+            if(maxPrice != null)
+            {
+                products= products.Where(c=> c.Price < maxPrice ).ToList();
+            }
+            
+
+
+
+            return Ok(products);
         }
 
         // GET api/<ProductsController>/5

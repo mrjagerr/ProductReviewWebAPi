@@ -10,7 +10,7 @@ using ProductReviewWebAPi.Data;
 namespace ProductReviewWebAPi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230905024514_initial")]
+    [Migration("20230908005205_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -36,7 +36,7 @@ namespace ProductReviewWebAPi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Product");
+                    b.ToTable("Products");
 
                     b.HasData(
                         new

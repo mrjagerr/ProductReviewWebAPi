@@ -17,7 +17,7 @@ namespace ProductReviewWebAPi.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Product",
+                name: "Products",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -28,7 +28,7 @@ namespace ProductReviewWebAPi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Product", x => x.Id);
+                    table.PrimaryKey("PK_Products", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -47,16 +47,16 @@ namespace ProductReviewWebAPi.Migrations
                 {
                     table.PrimaryKey("PK_Reviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reviews_Product_ProductId",
+                        name: "FK_Reviews_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "Product",
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.InsertData(
-                table: "Product",
+                table: "Products",
                 columns: new[] { "Id", "Name", "Price" },
                 values: new object[,]
                 {
@@ -102,7 +102,7 @@ namespace ProductReviewWebAPi.Migrations
                 name: "Reviews");
 
             migrationBuilder.DropTable(
-                name: "Product");
+                name: "Products");
         }
     }
 }
