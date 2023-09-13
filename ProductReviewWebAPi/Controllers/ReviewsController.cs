@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProductReviewWebAPi.Data;
+using ProductReviewWebAPi.DTOs;
+using ProductReviewWebAPi.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,24 +11,51 @@ namespace ProductReviewWebAPi.Controllers
     [ApiController]
     public class ReviewsController : ControllerBase
     {
+        private readonly ApplicationDbContext _context;
+        public ReviewsController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         // GET: api/<ReviewsController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            var reviews = _context.Reviews.ToList();
+            return StatusCode(200, reviews);
         }
 
         // GET api/<ReviewsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            var review = _context.Reviews.Find(id);
+            if (review == null)
+            {
+                return NotFound();
+            }
+            return Ok(review);
         }
 
         // POST api/<ReviewsController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] Review review)
         {
+            {
+                var reviews = new Review()
+                {
+                    Id = review.Id,
+                    Text = review.Text,
+                    Rating = review.Rating,
+                    ProductId = review.ProductId,
+                    Product =review.Product,
+                    
+                };
+
+                _context.Reviews.Add(reviews);
+               _context.SaveChanges();
+
+                return StatusCode(201, reviews);
+            }
         }
 
         // PUT api/<ReviewsController>/5
