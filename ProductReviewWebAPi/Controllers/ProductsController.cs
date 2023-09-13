@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using ProductReviewWebAPi.Data;
+using ProductReviewWebAPi.DTOs;
 using ProductReviewWebAPi.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -27,33 +28,49 @@ namespace ProductReviewWebAPi.Controllers
 
 
         // GET: api/<ProductsController> // Get All under 20$
-        [HttpGet]
-        public IActionResult GetMaxPrice([FromQuery]double?price) 
+        [HttpGet ("MaxPrice")]
+        public IActionResult GetMaxPrice([FromQuery]double?maxPrice=20) 
         {
-            double maxPrice = 20.00;
+            
             var products= _context.Products.ToList();   
+
+
             if(maxPrice != null)
             {
                 products= products.Where(c=> c.Price < maxPrice ).ToList();
             }
-            
-
-
-
+          
             return Ok(products);
         }
 
         // GET api/<ProductsController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(int id)
         {
-            return "value";
+            var product = _context.Products.Find(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return Ok(product);
         }
 
         // POST api/<ProductsController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost]  
+        public IActionResult Post([FromBody] ProductDTO product)
         {
+            {
+                var products = new Product()
+                {   Id = product.Id,
+                    Name = product.Name,
+                    Price = product.Price,
+                };
+
+                _context.Products.Add(products);
+                _context.SaveChanges();
+
+                return CreatedAtAction("Get", new { id = product.Id }, product);
+            }
         }
 
         // PUT api/<ProductsController>/5
