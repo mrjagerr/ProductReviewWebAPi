@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProductReviewWebAPi.Data;
 using ProductReviewWebAPi.DTOs;
 using ProductReviewWebAPi.Models;
@@ -40,19 +41,22 @@ namespace ProductReviewWebAPi.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Review review)
         {
+
             {
+
+               
+
+
                 var reviews = new Review()
                 {
-                    Id = review.Id,
                     Text = review.Text,
                     Rating = review.Rating,
                     ProductId = review.ProductId,
-                    Product =review.Product,
-                    
+ 
                 };
-
+                
                 _context.Reviews.Add(reviews);
-               _context.SaveChanges();
+                _context.SaveChanges();
 
                 return StatusCode(201, reviews);
             }

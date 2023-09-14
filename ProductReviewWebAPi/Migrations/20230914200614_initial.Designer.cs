@@ -10,7 +10,7 @@ using ProductReviewWebAPi.Data;
 namespace ProductReviewWebAPi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230908005205_initial")]
+    [Migration("20230914200614_initial")]
     partial class initial
     {
         /// <inheritdoc />
