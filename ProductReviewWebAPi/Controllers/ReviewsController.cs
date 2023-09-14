@@ -36,6 +36,17 @@ namespace ProductReviewWebAPi.Controllers
             }
             return Ok(review);
         }
+        // GET api/<ReviewsController>/5
+        [HttpGet("ProductId")]
+        public IActionResult GetByProductId([FromQuery] int? ProductId)
+        {
+            var reviews = _context.Reviews.ToList();
+           if(ProductId != null)
+            {
+                reviews = reviews.Where(r => r.ProductId == ProductId).ToList();
+            }
+            return Ok(reviews);
+        }
 
         // POST api/<ReviewsController>
         [HttpPost]
@@ -60,14 +71,39 @@ namespace ProductReviewWebAPi.Controllers
 
         // PUT api/<ReviewsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int id, [FromBody] Review review)
         {
+
+            var existingReview = _context.Reviews.Where(r => r.Id == id).FirstOrDefault();
+            if (existingReview!= null)
+            {
+                existingReview.Text = review.Text;
+                existingReview.Rating = review.Rating;
+                existingReview.ProductId = review.ProductId;
+                _context.SaveChanges();
+
+            }
+            else
+            {
+                return NotFound();
+            }
+            return StatusCode(200, review);
         }
 
         // DELETE api/<ReviewsController>/5
+        
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            
+            var review = _context.Reviews.Find(id);
+            if (review == null)
+            {
+                return NotFound();
+            }
+            _context.Reviews.Remove(review);
+            _context.SaveChanges();
+            return NoContent();
         }
     }
 }

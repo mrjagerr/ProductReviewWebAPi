@@ -75,14 +75,39 @@ namespace ProductReviewWebAPi.Controllers
 
         // PUT api/<ProductsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int id, [FromBody] ProductDTO product)
         {
+
+            var existingProduct = _context.Products.Where(p => p.Id == id).FirstOrDefault();
+
+            if (existingProduct!= null)
+            {
+                existingProduct.Name = product.Name;
+                existingProduct.Price = product.Price;
+               
+                _context.SaveChanges();
+            }
+            else
+            {
+                return NotFound();
+            }
+
+            return StatusCode(200, product);
         }
 
         // DELETE api/<ProductsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+
+            var product = _context.Products.Find(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            _context.Products.Remove(product);
+            _context.SaveChanges();
+            return NoContent();
         }
     }
 }
