@@ -44,15 +44,11 @@ namespace ProductReviewWebAPi.Controllers
 
             {
 
-               
-
-
                 var reviews = new Review()
                 {
                     Text = review.Text,
                     Rating = review.Rating,
                     ProductId = review.ProductId,
- 
                 };
                 
                 _context.Reviews.Add(reviews);
