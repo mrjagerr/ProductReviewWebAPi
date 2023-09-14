@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using ProductReviewWebAPi.Data;
 using ProductReviewWebAPi.DTOs;
@@ -45,13 +47,28 @@ namespace ProductReviewWebAPi.Controllers
 
         // GET api/<ProductsController>/5
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult GetbyId(int id)
         {
-            var product = _context.Products.Find(id);
-            if (product == null)
+            var product = _context.Products.Select(p => new ProductDTO
             {
-                return NotFound();
-            }
+                Id = p.Id,
+                Name = p.Name,
+                Price = p.Price,
+                AverageRating = ((int)p.Reviews.Average(r => r.Rating)),
+                 Reviews = p.Reviews.Select(r => new ReviewDTO
+                {
+                Id = r.Id,
+                Text = r.Text,
+                Rating = r.Rating,
+                } 
+
+               ).ToList()
+
+        }).Where(p => p.Id == id).ToList(); 
+
+           
+               
+           
             return Ok(product);
         }
 
